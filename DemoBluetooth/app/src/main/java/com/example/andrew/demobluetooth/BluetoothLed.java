@@ -11,9 +11,10 @@ package com.example.andrew.demobluetooth;
         import android.view.Menu;
         import android.view.MenuItem;
         import android.view.View;
+        import android.widget.EditText;
 
         import java.io.IOException;
-        import java.io.OutputStream;
+        import java.io.InputStream;
         import java.lang.reflect.InvocationTargetException;
         import java.lang.reflect.Method;
         import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class BluetoothLed extends ActionBarActivity {
     private BluetoothDevice mBluetoothDevice;
     private BluetoothSocket mBluetoothSocket;
     private BluetoothSocket fallbackSocket;
-    private OutputStream mBluetoothOutputStream;
+    private InputStream mBluetoothInputStream;
     private Set<BluetoothDevice> pairedDevices;
 
     @Override
@@ -77,8 +78,7 @@ public class BluetoothLed extends ActionBarActivity {
                         mBluetoothSocket =
                                 mBluetoothDevice.createInsecureRfcommSocketToServiceRecord(MY_UUID);
                         mBluetoothSocket.connect();
-                        mBluetoothOutputStream = mBluetoothSocket.getOutputStream();
-                        mBluetoothOutputStream.write(new String("*").getBytes());
+                        mBluetoothInputStream = mBluetoothSocket.getInputStream();
                     } catch (IOException e) {
                         try {
                             // Try to connect to Bluetooth device again in case of error
@@ -91,7 +91,7 @@ public class BluetoothLed extends ActionBarActivity {
                             fallbackSocket = (BluetoothSocket)
                                     m.invoke(mBluetoothSocket.getRemoteDevice(), params);
                             fallbackSocket.connect();
-                            mBluetoothOutputStream = fallbackSocket.getOutputStream();
+                            mBluetoothInputStream = fallbackSocket.getInputStream();
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         } catch (InvocationTargetException e1) {
@@ -108,14 +108,64 @@ public class BluetoothLed extends ActionBarActivity {
             });
             AlertDialog alert = builder.create();
             alert.show();
+
         }
 
+
+
         // Handle button click to toggle LED
+        // Output input into written thing
+        //public class EventListenerActivity implements ActionListener {
+        //}
+        //}
         this.findViewById(R.id.toggleButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
-                    mBluetoothOutputStream.write((int)'1');
-                } catch (IOException e) {
+
+
+
+                    EditText myText = (EditText) findViewById(R.id.blueIn);
+                    while (mBluetoothInputStream.available() > 0) {
+                        //myText.setText(Integer.toString(mBluetoothInputStream.read()));
+
+                       int test=0;
+                        //int prevTest = 1;
+                        String o = "";
+
+                        int value1 = mBluetoothInputStream.read()-'0';
+                        int value2 = mBluetoothInputStream.read()-'0';
+                        int trash = mBluetoothInputStream.read()-'0';
+
+                        int value = 10*value1 + value2;
+                        System.out.println(Integer.toString(value));
+
+
+                        if (value > 40)
+                        {
+                            test = 0;
+                            myText.setText(Integer.toString(test));
+                        }
+                        else if (value <= 40)
+                        {
+                            test = 1;
+                            myText.setText(Integer.toString(test));
+                        }
+
+                       // if (prevTest != test) {
+                         //   prevTest = test;
+                           // myText.setText("woop");
+                       // }
+
+                        //test = mBluetoothInputStream.read();
+                        //myText.setText((Integer.toString(mBluetoothInputStream.available())));
+                        //myText.setText((Integer.toString(test)));
+                        //mBluetoothInputStream.close();
+                    }
+                   // if (mBluetoothInputStream.available() == 0)
+                      //  myText.setText(("go fuck yourself"));
+
+                }
+                catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
