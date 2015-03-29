@@ -14,13 +14,12 @@ void loop() {
   sensorvalue = analogRead(sensor);
   byte flex = map(sensorvalue, 100, 240, 0, 100);
   if (Bluetooth.available()) {
-    Bluetooth.write(sensorvalue);    
+    Bluetooth.println(flex);  
+  Serial.println(flex);   
     
     //Bluetooth.println();
     
 
     }
   }
-  else {
-    Serial.println("Fuck everything");
-}
+
