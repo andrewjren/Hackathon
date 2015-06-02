@@ -135,6 +135,7 @@ public class BluetoothLed extends ActionBarActivity {
                         int value1 = mBluetoothInputStream.read()-'0';
                         int value2 = mBluetoothInputStream.read()-'0';
                         int trash = mBluetoothInputStream.read()-'0';
+                        int x = 2;
 
                         int value = 10*value1 + value2;
                         System.out.println(Integer.toString(value));
