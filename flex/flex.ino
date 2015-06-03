@@ -6,7 +6,8 @@ const unsigned int B = 11;
 int red;
 int green;
 int blue;
-int A; 
+
+int B;
 
 void setup()
 {
